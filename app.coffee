@@ -12,9 +12,10 @@ tracker.on 'warning', (error) ->
   console.log error.message
 
 tracker.on 'listening', ->
-  console.log "Listening on http port: #{server.http.address().port}"
+  console.log "Listening on http port: #{tracker.http.address().port}"
 
-tracker.listen 1337
+trackerPort = process.env.TRACKER_PORT or 1337
+tracker.listen trackerPort
 
 
 # Express
@@ -28,6 +29,6 @@ app.get '/stats', (req, res) ->
   res.end
 
 # Express server start
-port = 3000 unless process.env.PORT?
+port = process.env.PORT or 3000
 app.listen port, ->
   console.log 'Listening on port ' + port
