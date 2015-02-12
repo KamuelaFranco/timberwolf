@@ -1,27 +1,21 @@
-express   = require 'express'
-path      = require 'path'
+# Express
+express            = require 'express'
+app                = express()
 
-app       = express()
+# Torrent tracker
+bittorrent-tracker = require 'bittorrent-tracker'
+tracker            = new bittorrent.tracker.Server
+  udp:    false
+  http:   true
+  filter: (infoHash) -> infoHash
 
-app.use express.static path.join __dirname, 'public'
-
-app.get '/', (req, res) ->
-  console.log 'GET /'
-  res.end 'Gotcha'
-
-app.get '/announce/:key', (req, res) ->
-  console.log 'GET /announce'
-  res.end 'Gotcha announce'
-
-app.get '/scrape', (req, res) ->
-  console.log 'GET /scrape'
-  res.end 'Gotcha scrape'
-
+# Statistics API for main site
 app.get '/stats', (req, res) ->
   console.log 'GET /stats'
   res.json 'Stats'
   res.end
 
+# Express server start
 port = 3000 unless process.env.PORT?
 app.listen port, ->
   console.log 'Listening on port ' + port
