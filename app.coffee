@@ -1,13 +1,25 @@
-# Express
-express            = require 'express'
-app                = express()
-
 # Torrent tracker
-bittorrent-tracker = require 'bittorrent-tracker'
-tracker            = new bittorrent.tracker.Server
+btt = require 'bittorrent-tracker'
+tracker = new btt.Server
   udp:    false
   http:   true
   filter: (infoHash) -> infoHash
+
+tracker.on 'error', (error) ->
+  console.log error.message
+
+tracker.on 'warning', (error) ->
+  console.log error.message
+
+tracker.on 'listening', ->
+  console.log "Listening on http port: #{server.http.address().port}"
+
+tracker.listen 1337
+
+
+# Express
+express = require 'express'
+app = express()
 
 # Statistics API for main site
 app.get '/stats', (req, res) ->
