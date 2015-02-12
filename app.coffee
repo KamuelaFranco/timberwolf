@@ -1,3 +1,6 @@
+port = process.env.PORT || 3000
+trackerPort = process.env.PORT_TRACKER || 3001
+
 # Torrent tracker
 btt = require 'bittorrent-tracker'
 tracker = new btt.Server
@@ -5,18 +8,15 @@ tracker = new btt.Server
   http:   true
   filter: (infoHash) -> infoHash
 
+# Show errors in console
 tracker.on 'error', (error) ->
   console.log error.message
-
 tracker.on 'warning', (error) ->
   console.log error.message
 
-tracker.on 'listening', ->
-  console.log "Listening on http port: #{tracker.http.address().port}"
-
-trackerPort = process.env.TRACKER_PORT or 1337
-tracker.listen trackerPort
-
+# Tracker server start
+tracker.listen trackerPort, ->
+  console.log "Tracker module listening on http port: #{tracker.http.address().port}"
 
 # Express
 express = require 'express'
@@ -29,6 +29,5 @@ app.get '/stats', (req, res) ->
   res.end
 
 # Express server start
-port = process.env.PORT or 3000
 app.listen port, ->
-  console.log 'Listening on port ' + port
+  console.log 'Express listening on port ' + port
