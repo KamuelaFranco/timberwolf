@@ -1,0 +1,13 @@
+{
+  "name": "timberwolf",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "coffee app.coffee"
+  },
+  "dependencies": {
+    "bittorrent-tracker": "^3.1.1",
+    "coffee-script": "^1.9.0",
+    "express": "~4.11.1"
+  }
+}
