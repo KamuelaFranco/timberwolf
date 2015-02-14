@@ -1,4 +1,4 @@
-var Server = require('./').Server; //TODO: Fix this import, perhaps fix the module export in server.js
+var Server = require('./server');
 var express = require('express');
 var app = express();
 
