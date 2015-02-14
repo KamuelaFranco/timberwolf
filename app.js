@@ -38,13 +38,12 @@ var onHttpRequest = server.onHttpRequest.bind(server);
 app.get('/:secret/announce', function(req, res) {
   // TODO: Check this against the Bitcoin protocol docs for getting the right queries
   if (clearToAnnounce(req.params.secret, params.query.infohash, params.query.torrentClient)) {
-      // TODO: Test this function
-      onHttpRequest(req, res, { action: 'announce' });
-    } else {
-      res.send(200, EMPTY_ANNOUNCE_RESPONSE);
-      res.end();
-    }
-  });
+    // TODO: Test this function
+    onHttpRequest(req, res, { action: 'announce' });
+  } else {
+    res.send(200, EMPTY_ANNOUNCE_RESPONSE);
+    res.end();
+  }
 });
 
 // TODO: Allow for custom port settings and dynamic listening
