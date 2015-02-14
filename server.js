@@ -275,7 +275,7 @@ Server.prototype._onScrape = function (params, cb) {
       }
     });
 
-    cb(null, response)
+    cb(null, response);
   })
 };
 
@@ -322,7 +322,7 @@ function makeUdpPacket (params) {
       ]);
       break;
     default:
-      throw new Error('Action not implemented: ' + params.action)
+      throw new Error('Action not implemented: ' + params.action);
   }
-  return packet
+  return packet;
 }
