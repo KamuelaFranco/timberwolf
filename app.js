@@ -1,17 +1,16 @@
 // Validation functions
-
-// TODO: Implement this DB check for users
+// TODO: Implement this DB check for users #user_validation
 var isGoodUser = function(secret) {
   return true;
   // TODO: Return false if user has bad ratio
 };
 
-// TODO: Implement function for checking info_hash against DB
+// TODO: Implement function for checking info_hash against DB #torrent_existence
 var doesTorrentExist = function(infohash) {
   return true;
 };
 
-// TODO: Implement function to check torrent client against blocked list
+// TODO: Implement function to check torrent client against blocked list #client_whitelisting
 var isTorrentClientGood = function(torrentCient) {
   return true;
 };
@@ -37,18 +36,13 @@ var app = express();
 var onHttpRequest = server.onHttpRequest.bind(server);
 
 app.get('/:secret/announce', function(req, res) {
-  //var myQueries = {};
-  //for(var query in req.query) {
-  //
-  //}
   // TODO: Check this against the Bitcoin protocol docs for getting the right queries
   if (clearToAnnounce(req.params.secret, params.query.infohash, params.query.torrentClient)) {
       // TODO: Test this function
-      server.onHttpRequest(req, res, {
-        action: 'announce'
-      });
+      onHttpRequest(req, res, { action: 'announce' });
     } else {
-      return res.send(200, EMPTY_ANNOUNCE_RESPONSE);
+      res.send(200, EMPTY_ANNOUNCE_RESPONSE);
+      res.end();
     }
   });
 });
