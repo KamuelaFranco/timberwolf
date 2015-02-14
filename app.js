@@ -23,7 +23,7 @@
     return checkSecret(req.params.secret, function(isValid) {
       if (isValid) {
         return server.onHttpRequest(req, res, {
-          options: 'announce'
+          action: 'announce'
         });
       } else {
         return res.send(200, EMPTY_ANNOUNCE_RESPONSE);
