@@ -24,3 +24,4 @@ app.get '/:secret/announce', (req, res) ->
 // TODO: Dynamically determine port with environment variable
 app.listen 3000, ->
   console.log 'Tracker listening on a port...'
+  'testing'
