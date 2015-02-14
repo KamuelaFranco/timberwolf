@@ -3,26 +3,24 @@ server = new Server
   http: false,
   udp: false
 
+// TODO: Figure out why this is needed
 onHttpRequest = server.onHttpRequest.bind server
+
+// TODO: Implement checkSecret by referencing list of secret keys
+checkSecret = (secret) ->
+  true
 
 express = require 'express'
 app = express()
 
-router = express.Router()
+// TODO: Test this route
+app.get '/:secret/announce', (req, res) ->
+  checkSecret req.params.secret, (isValid) ->
+    if isValid
+      // TODO: Test this call
+      server.onHttpRequest req, res, action: 'announce'
+    else res.send 200, EMPTY_ANNOUNCE_RESPONSE
 
-router.use (req, res, next) ->
-  console.log 'Caught a request'
-  next()
-
-router.get '/announce/:id', (req, res, next) ->
-  console.log req.params.id
-  res.send 'Lose!'
-  next()
-
-app.use '/', router
-
-app.get '/announce', onHttpRequest
-app.get '/scrape', onHttpRequest
-
+// TODO: Dynamically determine port with environment variable
 app.listen 3000, ->
   console.log 'Tracker listening on a port...'
