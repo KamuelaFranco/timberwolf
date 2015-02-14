@@ -5,24 +5,17 @@ server = new Server
 
 onHttpRequest = server.onHttpRequest.bind server
 
+checkSecret = (secret) ->
+  true
+
 express = require 'express'
 app = express()
 
-router = express.Router()
-
-router.use (req, res, next) ->
-  console.log 'Caught a request'
-  next()
-
-router.get '/announce/:id', (req, res, next) ->
-  console.log req.params.id
-  res.send 'Lose!'
-  next()
-
-app.use '/', router
-
-app.get '/announce', onHttpRequest
-app.get '/scrape', onHttpRequest
+app.get '/:secret/announce', (req, res) ->
+  checkSecret req.params.secret, (isValid) ->
+    if isValid
+      server.onHttpRequest req, res, options: 'announce'
+    else res.send 200, EMPTY_ANNOUNCE_RESPONSE
 
 app.listen 3000, ->
   console.log 'Tracker listening on a port...'
