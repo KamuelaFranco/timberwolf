@@ -2,7 +2,7 @@ port = process.env.PORT || 3000
 trackerPort = process.env.PORT_TRACKER || 3001
 
 # Torrent tracker
-btt = require 'bittorrent-tracker'
+btt = require '.server'
 tracker = new btt.Server
   udp:    false
   http:   true
