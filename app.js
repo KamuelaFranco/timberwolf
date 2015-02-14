@@ -1,25 +1,23 @@
-var Server, app, checkSecret, express, onHttpRequest, server;
+var Server = require('./server');
 
-Server = require('./server');
+// Create new server we manage ourselves, thus false for both options
+server = new Server({http: false, udp: false});
 
-server = new Server({
-  http: false,
-  udp: false
-});
+// TODO: Better understand what's going on here
+var onHttpRequest = server.onHttpRequest.bind(server);
 
-onHttpRequest = server.onHttpRequest.bind(server);
-
-checkSecret = function(secret) {
+// TODO: Implement this DB check
+var checkSecret = function(secret) {
   return true;
 };
 
-express = require('express');
-
-app = express();
+var express = require('express');
+var app = express();
 
 app.get('/:secret/announce', function(req, res) {
   return checkSecret(req.params.secret, function(isValid) {
     if (isValid) {
+      // TODO: Test this function
       return server.onHttpRequest(req, res, {
         action: 'announce'
       });
@@ -29,6 +27,7 @@ app.get('/:secret/announce', function(req, res) {
   });
 });
 
+// TODO:
 app.listen(3000, function() {
   return console.log('Tracker listening on a port...');
 });
