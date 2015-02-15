@@ -13,7 +13,7 @@ var app = express();
 var isGoodUser = function (secret, callback) {
     db.getUser(secret, function (reply) {
         if (reply == null) {
-            callback(false);
+            callback('User not found');
         }
         else {
             callback(true)
@@ -22,8 +22,15 @@ var isGoodUser = function (secret, callback) {
 };
 
 // TODO: Implement function for checking info_hash against DB #torrent_existence
-var doesTorrentExist = function (infohash) {
-    return true;
+var doesTorrentExist = function (infohash, callback) {
+	db.getTorrent(infohash, function (reply) {
+		if (reply == null) {
+			callback('Unregistered Torrent');
+		}
+		else {
+			callback(true)
+		}
+	});
 };
 
 // TODO: Implement function to check torrent client against blocked list #client_whitelisting
@@ -33,11 +40,17 @@ var isTorrentClientGood = function (torrentCient) {
 
 var clearToAnnounce = function (secret, infohash, torrentClient, callback) {
     isGoodUser(secret, function (response) {
-        if (response == false) {
-            callback(false);
+        if (response != true) {
+            callback(response);
             return false;
         }
     });
+
+	doesTorrentExist(infohash, function (response) {
+		if (response != true) {
+			callback(response);
+		}
+	});
 };
 
 // TODO: Better understand what's going on here
@@ -47,11 +60,11 @@ app.get('/:secret/announce', function (req, res) {
     // TODO: Check this against the Bitcoin protocol docs for getting the right queries
     clearToAnnounce(req.params.secret, req.query.info_hash, req.query.peer_id, function (response)
     {
-        if (response) {
+        if (response == true) {
             // TODO: Test this function
             onHttpRequest(req, res, {action: 'announce'});
         } else {
-            res.send(200, 'blah');
+            res.send(200, response);
             res.end();
         }
     });

@@ -1,6 +1,7 @@
 // TODO: Database implementation
 var config = require('config');
 var Sequelize = require('sequelize');
+var sha1 = require('sha1');
 
 var redisClient = require("redis"),
 	redis = redisClient.createClient();
@@ -67,7 +68,7 @@ exports.loadUsers = function () {
 		{
 			userCount += 1;
 
-			redis.hmset(users[k].passkey, {
+			redis.hmset("users:" + users[k].passkey, {
 				"username": users[k].username,
 				"id": users[k].id,
 				"download": users[k].download,
@@ -88,8 +89,7 @@ exports.loadTorrents = function () {
 		for(k in torrents)
 		{
 			torrentCount += 1;
-
-			redis.hmset(torrents[k].info_hash, {
+			redis.hmset("torrents:" + sha1(torrents[k].info_hash), {
 				"seeders": torrents[k].seeders,
 				"leechers": torrents[k].leechers,
 				"snatched": torrents[k].snatched,
@@ -104,7 +104,13 @@ exports.loadTorrents = function () {
 };
 
 exports.getUser = function (passkey, callback) {
-	redis.hgetall("tracker:users:" + passkey, function (err, obj) {
+	redis.hgetall("users:" + passkey, function (err, obj) {
+		callback(obj);
+	});
+};
+
+exports.getTorrent = function (info_hash, callback) {
+	redis.hgetall("torrents:" + sha1(info_hash), function (err, obj) {
 		callback(obj);
 	});
 };
