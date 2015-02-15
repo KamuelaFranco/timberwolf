@@ -1,49 +1,61 @@
 // TODO: Database implementation
+var config = require('config');
+var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('database', 'username', 'password', {
-  host: 'localhost',
-  dialect: 'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql',
+var redisClient = require("redis"),
+    redis = redisClient.createClient();
 
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  },
+var sequelize = new Sequelize(config.get('database.database'), config.get('database.username'), config.get('database.password'), {
+    host: '10.0.2.15',
+    dialect: 'mysql',
+    port: 3306,
 
-  // SQLite only
-  storage: 'path/to/database.sqlite'
+    pool: {
+        max: 5,
+        min: 0,
+        idle: 10000
+    }
 });
 
-// Or you can simply use a connection uri
-var sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname');
+sequelize
+    .authenticate()
+    .complete(function (err) {
+        if (err) {
+            console.log('Unable to connect to the database:', err)
+        }
+    });
 
-var User = sequelize.define('user', {
-  firstName: {
-    type: Sequelize.STRING,
-    field: 'first_name' // Will result in an attribute that is firstName when user facing but first_name in the database
-  },
-  lastName: {
-    type: Sequelize.STRING
-  }
+var User = sequelize.define('User', {
+    username: Sequelize.STRING,
+    password: Sequelize.STRING,
+    passkey: Sequelize.STRING,
+    upload: Sequelize.INTEGER,
+    download: Sequelize.INTEGER,
+    enabled: Sequelize.INTEGER
 }, {
-  freezeTableName: true // Model tableName will be the same as the model name
+    tableName: 'users', // this will define the table's name
+    updatedAt: 'updated_at',
+    createdAt: 'created_at'
 });
 
-User.sync({force: true}).then(function () {
-  // Table created
-  return User.create({
-    firstName: 'John',
-    lastName: 'Hancock'
-  });
+redis.on("error", function (err) {
+    console.log("Redis Error " + err);
 });
 
-var sequelize = new Sequelize('connectionUri', {
-  define: {
-    timestamps: false // true by default
-  }
-});
+var exports = module.exports = {};
 
-var User = sequelize.define('user', {}); // timestamps is false by default
-var Post = sequelize.define('user', {}, {
-  timestamps: true // timestamps will now be true
-});
+exports.loadUsers = function () {
+    var userCount = 0;
+    User.findAll({where: {enabled: 1}}).then(function (users) {
+        for(k in users)
+        {
+            userCount += 1;
+            user = [users[k].username, users[k].id, users[k].download, users[k].passkey, users[k].upload, users[k].enabled];
+            redis.set(users[k].passkey, user);
+        }
+    });
+
+    //TODO: this won't work because it runs before the query is done.
+    console.log('Loaded users: ' + userCount);
+    console.log(redis.get('0ristj5ygmtdpazgrvcl9sxetdga66bl'));
+};
