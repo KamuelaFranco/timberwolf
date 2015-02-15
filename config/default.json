@@ -5,7 +5,8 @@
     "engine": "mysql",
     "username": "homestead",
     "password": "secret",
-    "host": "localhost",
-    "database": "homestead"
+    "host": "10.0.2.15",
+    "database": "homestead",
+    "port": 3306
   }
 }
