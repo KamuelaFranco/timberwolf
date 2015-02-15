@@ -1,7 +1,7 @@
 // TODO: Database implementation
 var config = require('config');
 var Sequelize = require('sequelize');
-var sha1 = require('sha1');
+var common = require('./lib/common');
 
 var redisClient = require("redis"),
 	redis = redisClient.createClient();
@@ -55,17 +55,16 @@ redis.on("error", function (err) {
 	console.log("Redis Error " + err);
 });
 
-redis.flushdb(function (err, didSucceed) {
-	console.log('Cleared Redis'); // true
-});
+//redis.flushdb(function (err, didSucceed) {
+//	console.log('Cleared Redis'); // true
+//});
 
 var exports = module.exports = {};
 
 exports.loadUsers = function () {
 	var userCount = 0;
 	User.findAll({where: {enabled: 1}}).then(function (users) {
-		for (k in users)
-		{
+		for (k in users) {
 			userCount += 1;
 
 			redis.hmset("users:" + users[k].passkey, {
@@ -84,17 +83,16 @@ exports.loadUsers = function () {
 
 exports.loadTorrents = function () {
 	var torrentCount = 0;
-	Torrent.findAll().then(function (torrents)
-	{
-		for(k in torrents)
-		{
+	Torrent.findAll().then(function (torrents) {
+		for (k in torrents) {
 			torrentCount += 1;
-			redis.hmset("torrents:" + sha1(torrents[k].info_hash), {
+			redis.hmset("torrents:" + common.binaryToHex(torrents[k].info_hash), {
 				"seeders": torrents[k].seeders,
 				"leechers": torrents[k].leechers,
 				"snatched": torrents[k].snatched,
 				"size": torrents[k].size,
-				"info_hash": torrents[k].info_hash
+				"id": torrents[k].id,
+				"info_hash": common.binaryToHex(torrents[k].info_hash)
 			});
 		}
 
@@ -110,7 +108,51 @@ exports.getUser = function (passkey, callback) {
 };
 
 exports.getTorrent = function (info_hash, callback) {
-	redis.hgetall("torrents:" + sha1(info_hash), function (err, obj) {
+	redis.hgetall("torrents:" + info_hash, function (err, obj) {
 		callback(obj);
+	});
+};
+
+exports.flushTorrents = function () {
+	redis.keys("torrents:*", function (err, torrents) {
+		console.log("Flushing " + torrents.length + " torrents.");
+		torrents.forEach(function (torrent, i) {
+			info_hash = torrent.split(":")[1];
+			exports.getTorrent(info_hash, function (torrent) {
+				Torrent.update(
+					{
+						'seeders': torrent.seeders,
+						'leechers': torrent.leechers,
+						'snatched': torrent.snatched
+					},
+					{
+						where: {id: torrent.id}
+					}
+				).then(function () {
+						//TODO: send API call to site to update the cache
+					});
+			});
+		});
+	});
+};
+
+exports.flushUsers = function () {
+	redis.keys('users:*', function (err, users) {
+		users.forEach(function (user, i) {
+			passkey = user.split(":")[1];
+			exports.getUser(passkey, function (user) {
+				User.update(
+					{
+						upload: user.upload,
+						download: user.download
+					},
+					{
+						where: {id: user.id}
+					}
+				).then(function () {
+						//TODO: send API call to site to update the cache
+					});
+			});
+		});
 	});
 };
