@@ -88,7 +88,7 @@ app.get('/:secret/scrape', function (req, res) {
 });
 
 app.get('/flush', function (req, res) {
-	db.flushUsers();
+	db.flushTorrents();
 	res.end();
 });
 
@@ -101,7 +101,7 @@ app.listen(3000, function () {
 db.loadUsers();
 db.loadTorrents();
 
-var f = schedule.scheduleJob('*/5 * * * *', function () {
+var f = schedule.scheduleJob('*/1 * * * *', function () {
 	db.flushTorrents();
 	db.flushUsers();
 });
