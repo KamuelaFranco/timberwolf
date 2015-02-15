@@ -1,8 +1,24 @@
+// Requires
+var Server = require('./server');
+// Create new server we manage ourselves, thus false for both options
+server = new Server({http: false, udp: false});
+var express = require('express');
+var config = require('config');
+var db = require('./db');
+var app = express();
+
+
 // Validation functions
 // TODO: Implement this DB check for users #user_validation
-var isGoodUser = function (secret) {
-    return true;
-    // TODO: Return false if user has bad ratio
+var isGoodUser = function (secret, callback) {
+    db.getUser(secret, function (reply) {
+        if (reply == null) {
+            callback(false);
+        }
+        else {
+            callback(true)
+        }
+    });
 };
 
 // TODO: Implement function for checking info_hash against DB #torrent_existence
@@ -15,35 +31,30 @@ var isTorrentClientGood = function (torrentCient) {
     return true;
 };
 
-var clearToAnnounce = function (secret, infohash, torrentClient) {
-    if (!isTorrentClientGood(torrentClient) || !doesTorrentExist(infohash) || !isGoodUser(secret)) {
-        return false;
-    } else {
-        return true;
-    }
+var clearToAnnounce = function (secret, infohash, torrentClient, callback) {
+    isGoodUser(secret, function (response) {
+        if (response == false) {
+            callback(false);
+            return false;
+        }
+    });
 };
-
-// Requires
-var Server = require('./server');
-// Create new server we manage ourselves, thus false for both options
-server = new Server({http: false, udp: false});
-var express = require('express');
-var config = require('config');
-var db = require('./db');
-var app = express();
 
 // TODO: Better understand what's going on here
 var onHttpRequest = server.onHttpRequest.bind(server);
 
 app.get('/:secret/announce', function (req, res) {
     // TODO: Check this against the Bitcoin protocol docs for getting the right queries
-    if (clearToAnnounce(req.params.secret, params.query.info_hash, params.query.peer_id)) {
-        // TODO: Test this function
-        onHttpRequest(req, res, {action: 'announce'});
-    } else {
-        res.send(200, EMPTY_ANNOUNCE_RESPONSE);
-        res.end();
-    }
+    clearToAnnounce(req.params.secret, req.query.info_hash, req.query.peer_id, function (response)
+    {
+        if (response) {
+            // TODO: Test this function
+            onHttpRequest(req, res, {action: 'announce'});
+        } else {
+            res.send(200, 'blah');
+            res.end();
+        }
+    });
 });
 
 // TODO: Allow for custom port settings and dynamic listening
@@ -53,3 +64,4 @@ app.listen(3000, function () {
 
 //Get all information
 db.loadUsers();
+db.loadTorrents();
