@@ -1,5 +1,5 @@
 // Requires
-var Server = require('./server');
+var Server = require('./lib/server');
 // Create new server we manage ourselves, thus false for both options
 server = new Server({http: false, udp: false});
 var express = require('express');
