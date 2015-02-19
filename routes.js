@@ -11,6 +11,7 @@ var bencode = require('bencode');
 var db = require('./lib/db');
 
 var express = require('express');
+var app = express();
 var router = express.Router();
 
 // Routes

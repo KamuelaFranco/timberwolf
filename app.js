@@ -1,12 +1,15 @@
 // Requires
 var config = require('config');
 var db = require('./lib/db');
+var express = require('express');
+var app = express();
 
 var schedule = require('node-schedule');
 
 // Routes specified in routes.js
+// TODO: Fix router middleware compile error
 var routes = require('./routes');
-app.use('routes');
+routes.use('routes');
 
 // Get all information
 db.loadUsers();
