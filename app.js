@@ -23,5 +23,5 @@ var f = schedule.scheduleJob('*/1 * * * *', function () {
 });
 
 app.listen(config.get('tracker.port'), function () {
-    return console.log('Tracker listening on a port' + config.get('tracker.port'));
+    return console.log('Tracker listening on a port ' + config.get('tracker.port'));
 });
