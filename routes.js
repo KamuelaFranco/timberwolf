@@ -19,14 +19,28 @@ var router = express.Router();
 
 // TODO: Fix all of these routes to properly "bubble down"
 app.get('/:secret/*', function (req, res, next) {
-    validations.isGoodUser(req.params.secret, function (isGoodUser) {
-        if (isGoodUser) next();
-        else res.end('Invalid secret. User authentication failed.');
+    var secret = params.query.secret;
+    validations.isGoodUser(secret, function (result) {
+        if (result != true) {
+            callback('Invalid passkey');
+            return false;
+        }
     });
 });
 
 // Save parameters to Redis and return swarm
 app.get('/:secret/announce', function (req, res) {
+    validations.doesTorrentExist(infohash, function (result) {
+        if (result != true) {
+            callback('Unregistered torrent');
+            return false;
+        }
+        callback(true);
+    });
+
+    // TODO: Return swarm
+
+    // TODO: Save queries to Redis
     res.end();
 });
 

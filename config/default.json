@@ -8,5 +8,9 @@
     "host": "10.0.2.15",
     "database": "homestead",
     "port": 3306
+  },
+  "tracker":
+  {
+    "port": 31337
   }
 }

@@ -18,7 +18,6 @@ var f = schedule.scheduleJob('*/1 * * * *', function () {
 	db.flushUsers();
 });
 
-// TODO: Allow for custom port settings and dynamic listening through config
-app.listen(3000, function () {
-    return console.log('Tracker listening on a port...');
+app.listen(config.get('tracker.port'), function () {
+    return console.log('Tracker listening on a port' + config.get('tracker.port'));
 });
