@@ -1,23 +1,44 @@
 // TODO: Move all routing to this module
+
+var Server = require('./lib/server');
+// Create new server we manage ourselves, thus false for both options
+var server = new Server({http: false, udp: false});
+// Update 'this' for current scope
+var onHttpRequest = server.onHttpRequest.bind(server);
+
+var common = require('./lib/common');
+var validations = require('./lib/validations');
+
+var bencode = require('bencode');
+var db = require('./lib/db');
+
+var express = require('express');
+var router = express.Router();
+
 // Routes
 
 // TODO: Fix all of these routes to properly "bubble down"
 app.get('/:secret/*', function (req, res, next) {
-    next();
+    validations.isGoodUser(req.params.secret, function (isGoodUser) {
+        if (isGoodUser) next();
+        else res.end('Invalid secret. User authentication failed.');
+    });
 });
 
 // Save parameters to Redis and return swarm
-app.get('/:secret/announce', function (req, res, next) {
+app.get('/:secret/announce', function (req, res) {
     res.end();
 });
 
+// TODO: Implement scrape functionality
 // Return peer count in swarm
-app.get('/:secret/scrape', function (req, res, next) {
-    res.end();
+app.get('/:secret/scrape', function (req, res) {
+    res.end('Scrape has not been implemented yet. Please /announce instead.');
 });
 
 // Parse Redis to write to persistent database
-app.get('/:secret/flush', function (req, res, next) {
+app.get('/:secret/flush', function (req, res) {
+    db.flushTorrents();
     res.end('Flushed');
 });
 
@@ -27,3 +48,37 @@ app.get('/:secret/flush', function (req, res, next) {
 app.all('*', function() {
     res.status(400).send('This is a torrent tracker. Please see the Bitcoin specification page for more information.');
 });
+
+module.exports = router;
+
+/* Old Routes
+app.get('/:secret/announce', function (req, res) {
+    var info_hash = common.binaryToHex(unescape(req.query.info_hash));
+    clearToAnnounce(req.params.secret, info_hash, req.query.peer_id, function (response) {
+        if (response == true) {
+            onHttpRequest(req, res, {action: 'announce'});
+        } else {
+            res.end(bencode.encode({
+                'failure reason': response
+            }));
+        }
+    });
+});
+
+app.get('/:secret/scrape', function (req, res) {
+    var info_hash = common.binaryToHex(unescape(req.query.info_hash));
+    clearToAnnounce(req.params.secret, info_hash, req.query.peer_id, function (response) {
+        if (response == true) {
+            onHttpRequest(req, res, {action: 'scrape'});
+        } else {
+            res.end(bencode.encode({
+                'failure reason': response
+            }));
+        }
+    });
+});
+
+app.get('/flush', function (req, res) {
+    db.flushTorrents();
+    res.end();
+});*/
