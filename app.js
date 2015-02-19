@@ -11,9 +11,10 @@ var common = require('./lib/common');
 var schedule = require('node-schedule');
 var validations = require('./lib/validations');
 
-// TODO: Better understand what's going on here
+// Update 'this' for current scope
 var onHttpRequest = server.onHttpRequest.bind(server);
 
+//Routes
 app.get('/:secret/announce', function (req, res) {
 	var info_hash = common.binaryToHex(unescape(req.query.info_hash));
 	clearToAnnounce(req.params.secret, info_hash, req.query.peer_id, function (response) {
