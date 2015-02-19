@@ -10,14 +10,14 @@ var validations = require('./lib/validations');
 var bencode = require('bencode');
 var db = require('./lib/db');
 
+// For express.Router()
 var express = require('express');
-var app = express();
 var router = express.Router();
 
 // Routes
 
 // TODO: Fix all of these routes to properly "bubble down"
-app.get('/:secret/*', function (req, res, next) {
+router.get('/:secret/*', function (req, res, next) {
     var secret = params.query.secret;
     validations.isGoodUser(secret, function (result) {
         if (result != true) {
@@ -28,7 +28,7 @@ app.get('/:secret/*', function (req, res, next) {
 });
 
 // Save parameters to Redis and return swarm
-app.get('/:secret/announce', function (req, res) {
+router.get('/:secret/announce', function (req, res) {
     validations.doesTorrentExist(infohash, function (result) {
         if (result != true) {
             callback('Unregistered torrent');
@@ -45,12 +45,12 @@ app.get('/:secret/announce', function (req, res) {
 
 // TODO: Implement scrape functionality
 // Return peer count in swarm
-app.get('/:secret/scrape', function (req, res) {
+router.get('/:secret/scrape', function (req, res) {
     res.end('Scrape has not been implemented yet. Please /announce instead.');
 });
 
 // Parse Redis to write to persistent database
-app.get('/:secret/flush', function (req, res) {
+router.get('/:secret/flush', function (req, res) {
     db.flushTorrents();
     res.end('Flushed');
 });
@@ -58,10 +58,11 @@ app.get('/:secret/flush', function (req, res) {
 
 // Catch-all for malformed request. Must remain as the last route or will break the tracker.
 // TODO: Make sure this doesn't belong _before_ other routes rather than after.
-app.all('*', function() {
+router.all('*', function(req, res) {
     res.status(400).send('This is a torrent tracker. Please see the Bitcoin specification page for more information.');
 });
 
+// export router for use in app.js
 module.exports = router;
 
 /* Old Routes

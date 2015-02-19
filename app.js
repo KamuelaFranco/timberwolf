@@ -7,9 +7,8 @@ var app = express();
 var schedule = require('node-schedule');
 
 // Routes specified in routes.js
-// TODO: Fix router middleware compile error
 var routes = require('./routes');
-routes.use('routes');
+app.use(routes);
 
 // Get all information
 db.loadUsers();
