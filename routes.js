@@ -7,17 +7,17 @@ app.get('/:secret/*', function (req, res, next) {
 });
 
 // Save parameters to Redis and return swarm
-app.get('/:secret/announce' function (req, res, next) {
+app.get('/:secret/announce', function (req, res, next) {
     res.end();
 });
 
 // Return peer count in swarm
-app.get('/:secret/scrape' function (req, res, next) {
+app.get('/:secret/scrape', function (req, res, next) {
     res.end();
 });
 
 // Parse Redis to write to persistent database
-app.get('/:secret/flush' function (req, res, next) {
+app.get('/:secret/flush', function (req, res, next) {
     res.end('Flushed');
 });
 
@@ -25,5 +25,5 @@ app.get('/:secret/flush' function (req, res, next) {
 // Catch-all for malformed request. Must remain as the last route or will break the tracker.
 // TODO: Make sure this doesn't belong _before_ other routes rather than after.
 app.all('*', function() {
-    res.end('This is a torrent tracker. Please see the Bitcoin specification page for more information.');
+    res.status(400).send('This is a torrent tracker. Please see the Bitcoin specification page for more information.');
 });
