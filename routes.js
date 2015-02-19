@@ -1,5 +1,3 @@
-// TODO: Move all routing to this module
-
 var Server = require('./lib/server');
 // Create new server we manage ourselves, thus false for both options
 var server = new Server({http: false, udp: false});

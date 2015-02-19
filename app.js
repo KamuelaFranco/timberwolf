@@ -12,6 +12,8 @@ app.use('routes');
 db.loadUsers();
 db.loadTorrents();
 
+// TODO: Load the whitelist from config
+
 // Flush Redis to persistent storage on time out
 var f = schedule.scheduleJob('*/1 * * * *', function () {
 	db.flushTorrents();
