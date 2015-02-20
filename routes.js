@@ -63,35 +63,3 @@ router.all('*', function(req, res) {
 
 // export router for use in app.js
 module.exports = router;
-
-/* Old Routes
-app.get('/:secret/announce', function (req, res) {
-    var info_hash = common.binaryToHex(unescape(req.query.info_hash));
-    clearToAnnounce(req.params.secret, info_hash, req.query.peer_id, function (response) {
-        if (response == true) {
-            onHttpRequest(req, res, {action: 'announce'});
-        } else {
-            res.end(bencode.encode({
-                'failure reason': response
-            }));
-        }
-    });
-});
-
-app.get('/:secret/scrape', function (req, res) {
-    var info_hash = common.binaryToHex(unescape(req.query.info_hash));
-    clearToAnnounce(req.params.secret, info_hash, req.query.peer_id, function (response) {
-        if (response == true) {
-            onHttpRequest(req, res, {action: 'scrape'});
-        } else {
-            res.end(bencode.encode({
-                'failure reason': response
-            }));
-        }
-    });
-});
-
-app.get('/flush', function (req, res) {
-    db.flushTorrents();
-    res.end();
-});*/
