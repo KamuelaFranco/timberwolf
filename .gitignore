@@ -1,3 +1,6 @@
 # Ignore the following
 node_modules
 .idea
+
+# Ignore production settings that you should manage yourself
+config/production.json
