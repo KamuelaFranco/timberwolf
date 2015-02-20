@@ -51,8 +51,7 @@ router.get('/:secret/scrape', function (req, res) {
 
 // Parse Redis to write to persistent database
 router.get('/:secret/flush', function (req, res) {
-    db.flushTorrents();
-    res.end('Flushed');
+
 });
 
 
