@@ -1,8 +1,5 @@
-var Server = require('./lib/server');
-// Create new server we manage ourselves, thus false for both options
-var server = new Server({http: false, udp: false});
 // Update 'this' for current scope
-var onHttpRequest = server.onHttpRequest.bind(server);
+var parseHttpRequest = require('./lib/parse_http')
 
 var common = require('./lib/common');
 var validations = require('./lib/validations');

@@ -4,6 +4,8 @@ var db = require('./lib/db');
 var express = require('express');
 var app = express();
 
+var TIMBERWOLF_ADMIN_SECRET = process.env.TIMBERWOLF_ADMIN_SECRET || 'horriblePassword';
+
 // Routes specified in routes.js
 var routes = require('./routes');
 app.use(routes);
