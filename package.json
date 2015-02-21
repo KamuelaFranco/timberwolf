@@ -16,19 +16,9 @@
     "hat": "0.0.3",
     "inherits": "^2.0.1",
     "ip": "^0.3.0",
-    "mysql": "^2.5.4",
-    "node-schedule": "^0.1.16",
     "once": "^1.3.0",
-    "redis": "^0.12.1",
     "run-series": "^1.0.2",
-    "sequelize": "^2.0.2",
     "simple-get": "^1.3.0",
     "string2compact": "^1.1.1"
-  },
-  "devDependencies": {
-    "magnet-uri": "^4.0.0",
-    "parse-torrent": "^3.0.1",
-    "standard": "^2.0.0",
-    "tape": "^3.0.3"
   }
 }
