@@ -1,5 +1,4 @@
-// Update 'this' for current scope
-var parseHttpRequest = require('./lib/parse_http')
+var parseHttpRequest = require('./lib/parse_http');
 
 var common = require('./lib/common');
 var validations = require('./lib/validations');
