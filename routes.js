@@ -1,7 +1,6 @@
 var parseHttp = require('./lib/parse_http');
 
 var common = require('./lib/common');
-var validations = require('./lib/validations');
 
 var bencode = require('bencode');
 
