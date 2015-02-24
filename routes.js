@@ -30,8 +30,9 @@ router.param('secret', function(req, res, next, id) { // id is type string
 router.get('/:secret/announce', function (req, res) {
     // TODO: Fix req.query.info_hash check
     // TODO: Check torrent existence
-    console.log(req.query.info_hash + ' ' + typeof req.query.info_hash);
-    if (torrents.indexOf(req.query.info_hash) !== -1) {
+    var infoHash = req.query.info_hash;
+    console.log(infoHash + ' ' + typeof infoHash);
+    if (infoHash && torrents.indexOf(infoHash) !== -1) { // check for info_hash and check for it in cache
         // TODO: Return swarm
         parseHttp.parseAnnounceRequest(req);
         // TODO: Save params to cache
@@ -44,14 +45,18 @@ router.get('/:secret/announce', function (req, res) {
 // Return peer count in swarm
 router.get('/:secret/scrape', function (req, res) {
     parseHttp.parseScrapeRequest(req);
-    //res.end('Scrape has not been implemented yet. Please /announce instead.');
+    res.end('Scrape has not been implemented yet. Please /announce instead.');
 });
 
 // TODO: Implement stats return
 // These routes are for API access
 router.get('/stats', function (req, res) {
-    res.json(userPasskeys);
-    res.end();
+    var authCode = req.query.auth;
+    if (authCode === config.get('stats.auth')) {
+        res.end('Here are the stats');
+    } else {
+        res.end('Failed authorization');
+    }
 });
 
 // Catch-all for malformed request. Must remain as the last route or will break the tracker.
