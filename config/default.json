@@ -1,7 +1,6 @@
 // For your own needs, replace this with something like production.json
 {
-  "database":
-  {
+  "database": {
     "engine": "mysql",
     "username": "homestead",
     "password": "secret",
@@ -9,8 +8,7 @@
     "database": "homestead",
     "port": 3306
   },
-  "tracker":
-  {
+  "tracker": {
     "port": 31337,
     "whitelist": []
   }
