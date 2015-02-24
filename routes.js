@@ -31,7 +31,6 @@ router.get('/:secret/announce', function (req, res) {
     // TODO: Fix req.query.info_hash check
     // TODO: Check torrent existence
     var infoHash = req.query.info_hash;
-    console.log(infoHash + ' ' + typeof infoHash);
     if (infoHash && torrents.indexOf(infoHash) !== -1) { // check for info_hash and check for it in cache
         // TODO: Return swarm
         parseHttp.parseAnnounceRequest(req);
