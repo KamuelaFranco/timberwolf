@@ -1,7 +1,6 @@
 console.log('Timberwolf Private Torrent Tracker');
 // Requires
 var config = require('config');
-var db = require('./lib/db');
 var express = require('express');
 var app = express();
 
