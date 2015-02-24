@@ -11,11 +11,9 @@ var router = express.Router();
 
 // TODO: Populate an actual list of user passkeys from memory or database
 var userPasskeys = ['432423423','3243243243','2343243243','234423'];
-var torrents = ['cb26218e255fd66c9af955cf755457d0a5f72891']
+var torrents = ['cb26218e255fd66c9af955cf755457d0a5f72891'];
 
 // These routes are for torrent access
-
-// TODO: Implement 'secret' param for user authentication
 
 // Parameter to handle user authentication by checking it against userPasskeys
 router.param('secret', function(req, res, next, id) { // id is type string
@@ -30,10 +28,10 @@ router.param('secret', function(req, res, next, id) { // id is type string
 
 // Save parameters and return swarm
 router.get('/:secret/announce', function (req, res) {
-    // TODO: Fix req.params.info_hash check
+    // TODO: Fix req.query.info_hash check
     // TODO: Check torrent existence
-    console.log(req.params.info_hash + ' ' + typeof req.params.info_hash)
-    if (torrents.indexOf(req.params.info_hash) !== -1) {
+    console.log(req.query.info_hash + ' ' + typeof req.query.info_hash);
+    if (torrents.indexOf(req.query.info_hash) !== -1) {
         // TODO: Return swarm
         parseHttp.parseAnnounceRequest(req);
         // TODO: Save params to cache
