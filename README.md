@@ -1,7 +1,7 @@
 # timberwolf
 ## A private torrent tracker based on [bittorrent-tracker](https://github.com/feross/bittorrent-tracker) written in [Node.js](http://github.com/joyent/node)
 
-####Note: Only use this software when you are willing to extensively test its stability for your applications or when you are willing to not care too much about the consequences of _NOT_ testing it.
+####Note: Only use this software willing to extensively test its stability for your applications or willing to not care too much about the consequences of _NOT_ testing it.
 
 This project is optimized for use as a private tracker. All requests flow through a user authentication function first, and then must subsequently pass torrent client whitelisting checks followed by the existence of the torrent itself on the tracker. Stats are cached locally and then written to a persistent database at a set time out.
 
