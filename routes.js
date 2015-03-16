@@ -55,7 +55,7 @@ router.get('/:secret/scrape', function (req, res) {
 // TODO: Implement stats return
 // These routes are for API access
 router.get('/stats', function (req, res) {
-		if (req.query.adminKey !== TIMBEWOLF_ADMIN_SECRET) {
+		if (req.query.adminKey !== TIMBERWOLF_ADMIN_SECRET) {
 			res.end('Failed authorization: Bad admin key');
 		}
 		res.json(stats);
