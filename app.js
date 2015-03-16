@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 
 process.stdout.write('Loading admin key from environment...');
-var TIMBERWOLF_ADMIN_SECRET = process.env.TIMBERWOLF_ADMIN_SECRET || 'horriblePassword';
+TIMBERWOLF_ADMIN_SECRET = process.env.TIMBERWOLF_ADMIN_SECRET || 'horriblePassword';
 console.log('Done');
 
 process.stdout.write('Initializing Express routes...');
