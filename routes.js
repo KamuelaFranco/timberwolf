@@ -1,21 +1,19 @@
 const parseHttp = require('./lib/parse_http');
-const common = require('./lib/common');
-const bencode = require('bencode');
-
-var stats = require('./lib/stats');
-// Initialize user statistics
-var stats = [];
-
-// For express.Router()
 const express = require('express');
+
+// Initialize user statistics
+let stats = require('./lib/stats');
 
 const router = express.Router();
 
 // TODO: Populate an actual list of user passkeys from memory or database
 let userPasskeys = ['432423423', '3243243243', '2343243243', '234423'];
 let torrents = ['cb26218e255fd66c9af955cf755457d0a5f72891'];
+
+// TODO: Implement whitelist support
 let whitelist = ['asdf', 'asdf2'];
 
+const TIMBERWOLF_ADMIN_SECRET = process.env.TIMBERWOLF_ADMIN_SECRET || 'horriblePassword';
 
 // These routes are for torrent access
 
@@ -35,7 +33,8 @@ router.get('/:secret/announce', (req, res) => {
   // TODO: Fix req.query.info_hash check
   // TODO: Check torrent existence
   const infoHash = req.query.info_hash;
-  if (infoHash && torrents.indexOf(infoHash) !== -1) { // check for info_hash and check for it in cache
+  // check for info_hash and check for it in cache
+  if (infoHash && torrents.indexOf(infoHash) !== -1) {
     // TODO: Return swarm
     parseHttp.parseAnnounceRequest(req);
     // TODO: Save params to cache
