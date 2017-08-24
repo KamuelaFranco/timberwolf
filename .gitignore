@@ -4,3 +4,4 @@ node_modules
 
 # Ignore production settings that you should manage yourself
 config/production.json
+*.log
