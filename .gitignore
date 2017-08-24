@@ -1,5 +1,5 @@
 # Ignore the following
-node_modules
+node_modules/
 .idea
 
 # Ignore production settings that you should manage yourself
